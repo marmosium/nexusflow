@@ -1,9 +1,24 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import MainHomePage from "./pages/MainHomePage";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   return (
-    <div className="bg-gray-900 h-screen flex items-center justify-center">
-      <h1 className="text-white text-4xl font-bold">NexusFlow</h1>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <MainHomePage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
