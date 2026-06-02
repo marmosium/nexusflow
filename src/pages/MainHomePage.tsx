@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  BarChart2,
-  Users,
-  FolderKanban,
-  CheckSquare,
-  FileText,
-  Settings,
+  Package,
+  Lock,
   LogOut,
   ChevronRight,
   Bell,
@@ -14,62 +11,64 @@ import { supabase } from "../lib/supabase";
 
 const modules = [
   {
-    icon: BarChart2,
-    title: "Analitik",
-    description: "Gerçek zamanlı veri ve performans metrikleri",
+    icon: Package,
+    title: "Stok İşlemleri",
+    description: "Stok işlemleri bu modül üzerinden gerçekleştirilir",
     color: "text-indigo-400",
     border: "hover:border-indigo-500/50",
     glow: "group-hover:bg-indigo-500/10",
     gradient: "from-indigo-500/20 to-transparent",
+    href: "/stok",
   },
   {
-    icon: Users,
-    title: "Müşteriler",
-    description: "Müşteri ilişkileri ve iletişim yönetimi",
-    color: "text-sky-400",
-    border: "hover:border-sky-500/50",
-    glow: "group-hover:bg-sky-500/10",
-    gradient: "from-sky-500/20 to-transparent",
+    icon: Lock,
+    title: "Çok Yakında",
+    description: "Çok yakında hizmete girecektir",
+    color: "text-gray-500",
+    border: "hover:border-gray-700/50",
+    glow: "group-hover:bg-gray-700/10",
+    gradient: "from-gray-700/10 to-transparent",
   },
   {
-    icon: FolderKanban,
-    title: "Projeler",
-    description: "Proje takibi ve kaynak planlaması",
-    color: "text-violet-400",
-    border: "hover:border-violet-500/50",
-    glow: "group-hover:bg-violet-500/10",
-    gradient: "from-violet-500/20 to-transparent",
+    icon: Lock,
+    title: "Çok Yakında",
+    description: "Çok yakında hizmete girecektir",
+    color: "text-gray-500",
+    border: "hover:border-gray-700/50",
+    glow: "group-hover:bg-gray-700/10",
+    gradient: "from-gray-700/10 to-transparent",
   },
   {
-    icon: CheckSquare,
-    title: "Görevler",
-    description: "Ekip görevleri ve öncelik yönetimi",
-    color: "text-emerald-400",
-    border: "hover:border-emerald-500/50",
-    glow: "group-hover:bg-emerald-500/10",
-    gradient: "from-emerald-500/20 to-transparent",
+    icon: Lock,
+    title: "Çok Yakında",
+    description: "Çok yakında hizmete girecektir",
+    color: "text-gray-500",
+    border: "hover:border-gray-700/50",
+    glow: "group-hover:bg-gray-700/10",
+    gradient: "from-gray-700/10 to-transparent",
   },
   {
-    icon: FileText,
-    title: "Raporlar",
-    description: "Özelleştirilebilir rapor ve ihracat araçları",
-    color: "text-amber-400",
-    border: "hover:border-amber-500/50",
-    glow: "group-hover:bg-amber-500/10",
-    gradient: "from-amber-500/20 to-transparent",
+    icon: Lock,
+    title: "Çok Yakında",
+    description: "Çok yakında hizmete girecektir",
+    color: "text-gray-500",
+    border: "hover:border-gray-700/50",
+    glow: "group-hover:bg-gray-700/10",
+    gradient: "from-gray-700/10 to-transparent",
   },
   {
-    icon: Settings,
-    title: "Ayarlar",
-    description: "Sistem ve hesap yapılandırması",
-    color: "text-rose-400",
-    border: "hover:border-rose-500/50",
-    glow: "group-hover:bg-rose-500/10",
-    gradient: "from-rose-500/20 to-transparent",
+    icon: Lock,
+    title: "Çok Yakında",
+    description: "Çok yakında hizmete girecektir",
+    color: "text-gray-500",
+    border: "hover:border-gray-700/50",
+    glow: "group-hover:bg-gray-700/10",
+    gradient: "from-gray-700/10 to-transparent",
   },
 ];
 
 export default function MainHomePage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
@@ -84,6 +83,21 @@ export default function MainHomePage() {
   }
 
   const initial = email ? email[0].toUpperCase() : "U";
+
+  const stokRolRotasi: Record<string, string> = {
+    "oparator@gmail.com": "/stok/operator",
+    "kidemlioparator@gmail.com": "/stok/kidemli-operator",
+    "birimamiri@gmail.com": "/stok/birim-amiri",
+  };
+
+  function handleModulClick(href: string) {
+    if (href === "/stok") {
+      const rota = email ? stokRolRotasi[email] : undefined;
+      navigate(rota ?? "/stok");
+    } else {
+      navigate(href);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col">
@@ -144,10 +158,12 @@ export default function MainHomePage() {
       {/* Modüller */}
       <main className="relative z-10 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {modules.map(({ icon: Icon, title, description, color, border, glow, gradient }) => (
+          {modules.map(({ icon: Icon, title, description, color, border, glow, gradient, href }) => (
             <button
               key={title}
-              className={`group relative text-left bg-gray-900 border border-gray-800 rounded-2xl p-6 ${border} transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-950 overflow-hidden`}
+              onClick={() => href && handleModulClick(href)}
+              disabled={!href}
+              className={`group relative text-left bg-gray-900 border border-gray-800 rounded-2xl p-6 ${border} transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-950 overflow-hidden disabled:cursor-not-allowed`}
             >
               {/* Arka plan parlaması */}
               <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
